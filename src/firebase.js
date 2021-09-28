@@ -18,7 +18,13 @@
 // export { db, auth };
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+} from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyC-6D2xRg7axGKQO4YsgYlbD7r9W_TC_QA',
@@ -34,7 +40,12 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 // const db = firebaseApp.firestore();
 const auth = getAuth();
+
 const registerUser = (email, password) =>
     createUserWithEmailAndPassword(auth, email, password);
 
-export { registerUser };
+const userSignin = (email, password) =>
+    signInWithEmailAndPassword(auth, email, password);
+
+const userSignOut = () => signOut(auth);
+export { registerUser, userSignin, auth, onAuthStateChanged, userSignOut };

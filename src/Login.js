@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { registerUser } from './firebase.js';
+import { registerUser, userSignin } from './firebase.js';
 import './Login.css';
+import { useStateValue } from './StateProvider.js';
 
 function Login() {
     const history = useHistory();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [{ user }] = useStateValue();
 
     const signin = (e) => {
         e.preventDefault();
+
+        userSignin(email, password)
+            .then((auth) => history.push('/'))
+            .catch((error) => alert(error.message));
     };
 
     const register = () => {
@@ -24,7 +30,7 @@ function Login() {
 
     return (
         <div className="login">
-            <Link to="/">
+            <Link to={!user && '/login'}>
                 <img
                     className="login__logo"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png"
