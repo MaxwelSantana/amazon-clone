@@ -7,13 +7,13 @@ import Login from './Login';
 import { useEffect } from 'react';
 import { auth, onAuthStateChanged } from './firebase';
 import { useStateValue } from './StateProvider';
+import Payment from './Payment';
 
 function App() {
     const [, dispatch] = useStateValue();
 
     useEffect(() => {
         onAuthStateChanged(auth, (authUser) => {
-            console.log('THE USER IS >>>>>', authUser);
             if (authUser) {
                 dispatch({ type: 'SET_USER', user: authUser });
             } else {
@@ -36,6 +36,10 @@ function App() {
                     <Route path="/checkout">
                         <Header />
                         <Checkout />
+                    </Route>
+                    <Route path="/payment">
+                        <Header />
+                        <Payment />
                     </Route>
                 </Switch>
             </div>

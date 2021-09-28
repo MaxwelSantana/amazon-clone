@@ -3,9 +3,12 @@ import './Checkout.css';
 import Subtotal from './Subtotal';
 import CheckoutProduct from './CheckoutProduct';
 import { useStateValue } from './StateProvider';
+import { Flipper, Flipped } from 'react-flip-toolkit';
 
 function Checkout() {
     const [{ basket, user }] = useStateValue();
+
+    console.log('Checkout Render');
 
     return (
         <div className="checkout">
@@ -19,16 +22,23 @@ function Checkout() {
                 <div>
                     <h3>Hello, {user?.email}</h3>
                     <h2 className="checkout__title">Your shopping Basket</h2>
-                    {basket.map((item) => (
-                        <CheckoutProduct
-                            key={item.id}
-                            id={item.id}
-                            title={item.title}
-                            price={item.price}
-                            image={item.image}
-                            rating={item.rating}
-                        />
-                    ))}
+                    <Flipper flipKey={basket.length}>
+                        <Flipped flipId="list">
+                            <div>
+                                {basket.map((item, i) => (
+                                    <Flipped key={item.id + i} flipId={item.id}>
+                                        <CheckoutProduct
+                                            id={item.id}
+                                            title={item.title}
+                                            price={item.price}
+                                            image={item.image}
+                                            rating={item.rating}
+                                        />
+                                    </Flipped>
+                                ))}
+                            </div>
+                        </Flipped>
+                    </Flipper>
                 </div>
             </div>
             <div className="checkout__right">
