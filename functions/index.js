@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
-const { StarOutlineSharp } = require("@mui/icons-material");
 const stripe = require("stripe")(
   // eslint-disable-next-line max-len
   "sk_test_51Jf21dFTHpjxfhtfzBXo1Skq5fgXYjlTbX7HEhlb4Ir2ZuNzA69P9Y2moMTZuQU0RRQdyTtUXyG8Br5B9noQnjEc00VLQShlvD"
@@ -15,7 +14,7 @@ app.use(express.json());
 app.get("/", (req, res) => res.status(200).send("Hello world"));
 
 app.post("/payments/create", async (req, res) => {
-  const total = request.query.total;
+  const total = req.query.total;
   console.log("Payment request received", total);
 
   const paymentIntent = await stripe.paymentIntents.create({

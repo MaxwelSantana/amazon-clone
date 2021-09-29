@@ -6,6 +6,7 @@ module.exports = {
   },
   extends: ["eslint:recommended", "google", "prettier"],
   plugins: ["prettier"],
+  parser: "babel-eslint",
   rules: {
     quotes: ["error", "double"],
     indent: ["error", 2],

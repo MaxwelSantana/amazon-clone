@@ -40,7 +40,7 @@ function Payment() {
         setProcessing(true);
 
         const payload = await stripe
-            .confirmCardPayment(clientSecret, {
+            .confirmCardPayment(clientSecret.client_secret, {
                 payment_method: {
                     card: elements.getElement(CardElement),
                 },
@@ -79,8 +79,9 @@ function Payment() {
                         <h3>Review items and delivery</h3>
                     </div>
                     <div className="payment__items">
-                        {basket.map((item) => (
+                        {basket.map((item, index) => (
                             <CheckoutProduct
+                                key={index}
                                 id={item.id}
                                 title={item.title}
                                 price={item.price}
