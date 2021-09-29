@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import CheckoutProduct from './CheckoutProduct';
-import './Payment.css';
-import { useStateValue } from './StateProvider';
+import { doc, setDoc } from '@firebase/firestore';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { getBasketTotal } from './reducer';
+import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
+import { Link, useHistory } from 'react-router-dom';
 import axios from './axios';
-import { ContentPasteOffOutlined } from '@mui/icons-material';
+import CheckoutProduct from './CheckoutProduct';
+import { db } from './firebase';
+import './Payment.css';
+import { getBasketTotal } from './reducer';
+import { useStateValue } from './StateProvider';
 
 function Payment() {
     const [{ basket, user }, dispatch] = useStateValue();
@@ -34,7 +35,6 @@ function Payment() {
         getClientSecret();
     }, [basket]);
 
-    console.log('The SECRET IS >>>>', clientSecret);
     const handleSubmit = async (event) => {
         event.preventDefault();
         setProcessing(true);
@@ -45,10 +45,25 @@ function Payment() {
                     card: elements.getElement(CardElement),
                 },
             })
-            .then(({ paymentIntent }) => {
+            .then(async ({ paymentIntent }) => {
+                console.log({ paymentIntent });
+
+                await setDoc(
+                    doc(db, 'users', user?.uid, 'orders', paymentIntent.id),
+                    {
+                        basket,
+                        amount: paymentIntent.amount,
+                        created: paymentIntent.created,
+                    },
+                );
+
                 setSucceeded(true);
                 setError(null);
                 setProcessing(false);
+
+                dispatch({
+                    type: 'EMPTY_BASKET',
+                });
 
                 history.replace('/orders');
             });
@@ -68,11 +83,11 @@ function Payment() {
                     <div className="payment__title">
                         <h3>Delivery Address</h3>
                     </div>
-                    <dic className="payment__address">
+                    <div className="payment__address">
                         <p>{user?.email}</p>
                         <p>123 React Lane</p>
                         <p>Los Angeles, CA</p>
-                    </dic>
+                    </div>
                 </div>
                 <div className="payment__section">
                     <div className="payment__title">

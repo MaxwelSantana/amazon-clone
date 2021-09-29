@@ -19,12 +19,13 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import {
-    getAuth,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
+    getAuth,
     onAuthStateChanged,
-    signOut
+    signInWithEmailAndPassword,
+    signOut,
 } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyC-6D2xRg7axGKQO4YsgYlbD7r9W_TC_QA',
@@ -37,8 +38,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+// eslint-disable-next-line no-unused-vars
 const firebaseApp = initializeApp(firebaseConfig);
-// const db = firebaseApp.firestore();
+const db = getFirestore();
 const auth = getAuth();
 
 const registerUser = (email, password) =>
@@ -48,4 +50,4 @@ const userSignin = (email, password) =>
     signInWithEmailAndPassword(auth, email, password);
 
 const userSignOut = () => signOut(auth);
-export { registerUser, userSignin, auth, onAuthStateChanged, userSignOut };
+export { registerUser, userSignin, auth, db, onAuthStateChanged, userSignOut };
